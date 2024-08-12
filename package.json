@@ -1,10 +1,10 @@
 {
-  "name": "KumadeTV-FILM",
+  "name": "KumadeTV-film",
   "version": "1.0.0",
   "description": "",
   "main": "script.js",
   "scripts": {
-    "start": "node scripr.js"
+    "start": "node script.js"
   },
   "keywords": [],
   "author": "",
