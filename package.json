@@ -1,0 +1,17 @@
+{
+  "name": "KumadeTV-FILM",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "node scripr.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.3",
+    "cheerio": "^1.0.0",
+    "express": "^4.19.2"
+  }
+}
