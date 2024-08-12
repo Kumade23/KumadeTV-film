@@ -101,6 +101,6 @@ app.post('/scrape', async (req, res) => {
     res.json(moviesData);
 });
 
-app.listen(2311, () => {
+app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
