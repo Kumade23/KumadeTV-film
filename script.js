@@ -28,11 +28,6 @@ app.get('/scrape', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'scrape.html'));
 });
 
-// Servire la pagina di lista film
-app.get('/films', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'films.html'));
-});
-
 // Endpoint per ottenere la lista JSON in formato raw
 app.get('/film', (req, res) => {
     res.json(moviesData);
