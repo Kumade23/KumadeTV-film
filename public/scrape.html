@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi Film</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            box-sizing: border-box;
+        }
+        .container {
+            min-height: 100vh; /* Assicura che il contenitore principale copra l'intero viewport */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            width: 100%;
+        }
+        .menu {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .menu a:hover {
+            text-decoration: underline;
+        }
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        .form-container input {
+            width: calc(100% - 22px); /* Spazio per il padding */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            .menu a {
+                display: block;
+                margin: 10px 0;
+            }
+            .form-container input {
+                font-size: 14px;
+            }
+            .form-container button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Aggiungi Film</h1>
+        </div>
+
+        <div class="menu">
+            <a href="/">Lista Film</a>
+            <a href="/scrape">Aggiungi Film</a>
+        </div>
+
+        <div class="form-container">
+            <form id="scrapeForm">
+                <input type="text" id="imdbUrl" placeholder="Inserisci link IMDb" required>
+                <button type="submit">Aggiungi</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const imdbUrl = document.getElementById('imdbUrl').value;
+            const response = await fetch('/scrape', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imdbUrl })
+            });
+            const result = await response.json();
+            alert('Film aggiunto: ' + result.groups[result.groups.length - 1].name);
+            document.getElementById('imdbUrl').value = ''; // Pulisci il campo
+        });
+    </script>
+</body>
+</html>

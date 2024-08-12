@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Film</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            box-sizing: border-box;
+        }
+        .container {
+            min-height: 100vh; /* Assicura che il contenitore principale copra l'intero viewport */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            width: 100%;
+        }
+        .menu {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .menu a:hover {
+            text-decoration: underline;
+        }
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-box input {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .film-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        .film-item {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 200px;
+            background: white;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+            /* Altezza automatica in base al contenuto */
+        }
+        .film-item:hover {
+            transform: scale(1.05);
+        }
+        .film-item img {
+            width: 100%;
+            height: auto; /* Altezza automatica per adattarsi al contenitore */
+            max-height: 300px; /* Altezza massima per evitare che le immagini diventino troppo grandi */
+            object-fit: cover; /* Mantiene l'aspect ratio senza distorcere */
+            border-radius: 5px;
+        }
+        .film-item h3 {
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 0 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 600px) {
+            .film-item {
+                width: 150px;
+            }
+            .search-box input {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Lista Film</h1>
+        </div>
+
+        <div class="menu">
+            <a href="/">Lista Film</a>
+            <a href="/scrape">Aggiungi Film</a>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Cerca un film..." onkeyup="searchFilm()" />
+        </div>
+
+        <div class="film-container" id="filmContainer">
+            <!-- I film verranno aggiunti qui -->
+        </div>
+
+    </div>
+
+    <script>
+        async function fetchFilms(query = '') {
+            const response = await fetch(`/film/search?q=${query}`);
+            const films = await response.json();
+            displayFilms(films);
+        }
+
+        function displayFilms(films) {
+            const filmContainer = document.getElementById('filmContainer');
+            filmContainer.innerHTML = ''; // Pulisce la lista attuale
+
+            films.forEach(film => {
+                const filmItem = document.createElement('div');
+                filmItem.className = 'film-item';
+                filmItem.innerHTML = `
+                    <img src="${film.image}" alt="${film.name}">
+                    <h3>${film.name}</h3>
+                `;
+                filmContainer.appendChild(filmItem);
+            });
+        }
+
+        function searchFilm() {
+            const query = document.getElementById('search').value;
+            fetchFilms(query);
+        }
+
+        // Carica la lista dei film al caricamento della pagina
+        window.onload = () => fetchFilms();
+    </script>
+</body>
+</html>
