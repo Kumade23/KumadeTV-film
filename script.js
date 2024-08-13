@@ -40,7 +40,7 @@ app.get('/film', (req, res) => {
 
 // Endpoint per eliminare un film
 app.post('/delete-film', (req, res) => {
-    const { password, movieName } = req.body;
+    const { movieName, password} = req.body;
 
     // Verifica della password
     if (password !== '@kumade23') {
