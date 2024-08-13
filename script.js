@@ -105,6 +105,13 @@ app.post('/scrape', async (req, res) => {
             return res.status(404).json({ error: "Film non disponibile" });
         }
 
+        // Controllo se il film è già presente
+        const isMoviePresent = moviesData.groups.some(movie => movie.name.localeCompare(movieTitle, undefined, { sensitivity: 'base' }) === 0);
+
+        if (isMoviePresent) {
+            return res.status(409).json({ error: "Film già disponibile" });
+        }
+
         const $ = cheerio.load(mostraguardaResponse.data);
 
         // Estrarre i link e i nomi
