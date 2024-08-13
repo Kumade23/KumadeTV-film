@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // Serve file statici d
 const PORT = 3000;
 const jsonFilePath = 'movies.json';
 
-let moviesData = { "name": "🎬 FILM 🎬", "author": "@kumade23", "image": "https://telegra.ph/file/8bdf748bceb1a0d6389a3.png", "groups": [] };
+let moviesData = { "name": "🎬 FILM 🎬", "author": "@kumade23", "image": "https://telegra.ph/file/8bdf748bceb1a0d6389a3", "groups": [] };
 
 // Carica i dati esistenti nel JSON, se presente
 if (fs.existsSync(jsonFilePath)) {
@@ -28,10 +28,41 @@ app.get('/scrape', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'scrape.html'));
 });
 
+// Servire la pagina di lista film
+app.get('/films', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'films.html'));
+});
+
 // Endpoint per ottenere la lista JSON in formato raw
 app.get('/film', (req, res) => {
     res.json(moviesData);
 });
+
+// Endpoint per eliminare un film
+app.post('/delete-film', (req, res) => {
+    const { password, movieName } = req.body;
+
+    // Verifica della password
+    if (password !== '@kumade23') {
+        return res.status(403).json({ error: 'Password non corretta' });
+    }
+
+    // Trova l'indice del film da eliminare
+    const movieIndex = moviesData.groups.findIndex(movie => movie.name === movieName);
+
+    if (movieIndex === -1) {
+        return res.status(404).json({ error: 'Film non trovato' });
+    }
+
+    // Rimuovi il film dalla lista
+    moviesData.groups.splice(movieIndex, 1);
+
+    // Salva i dati aggiornati su disco
+    fs.writeFileSync(jsonFilePath, JSON.stringify(moviesData, null, 2));
+
+    res.json({ success: true, message: 'Film eliminato con successo' });
+});
+
 
 // Endpoint per restituire film ordinati e filtrati
 app.get('/film/search', (req, res) => {
