@@ -103,23 +103,39 @@
                 <input type="text" id="imdbUrl" placeholder="Inserisci link IMDb" required>
                 <button type="submit">Aggiungi</button>
             </form>
-        </div>
+            <p id="errorMessage" style="color: red; display: none;"></p> <!-- Elemento per messaggi di errore -->
+        </div>        
 
     </div>
 
     <script>
-        document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const imdbUrl = document.getElementById('imdbUrl').value;
-            const response = await fetch('/scrape', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ imdbUrl })
-            });
-            const result = await response.json();
+document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const imdbUrl = document.getElementById('imdbUrl').value;
+    const errorMessage = document.getElementById('errorMessage');
+    
+    try {
+        const response = await fetch('/scrape', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imdbUrl })
+        });
+        
+        const result = await response.json();
+
+        if (response.ok) {
             alert('Film aggiunto: ' + result.groups[result.groups.length - 1].name);
             document.getElementById('imdbUrl').value = ''; // Pulisci il campo
-        });
+            errorMessage.style.display = 'none'; // Nasconde il messaggio di errore
+        } else {
+            throw new Error(result.error || 'Errore durante l\'aggiunta del film');
+        }
+    } catch (error) {
+        errorMessage.textContent = error.message;
+        errorMessage.style.display = 'block'; // Mostra il messaggio di errore
+    }
+});
+
     </script>
 </body>
 </html>
