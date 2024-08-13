@@ -74,7 +74,7 @@
             align-items: center;
             padding: 10px;
             box-sizing: border-box;
-            /* Altezza automatica in base al contenuto */
+            position: relative; /* Posizionamento relativo per l'icona del cestino */
         }
         .film-item:hover {
             transform: scale(1.05);
@@ -93,6 +93,25 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+        .delete-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .delete-icon:hover {
+            background: rgba(255, 0, 0, 1);
         }
 
         @media (max-width: 600px) {
@@ -143,6 +162,7 @@
                 filmItem.innerHTML = `
                     <img src="${film.image}" alt="${film.name}">
                     <h3>${film.name}</h3>
+                    <button class="delete-icon" onclick="deleteFilm('${film.name}')">🗑️</button>
                 `;
                 filmContainer.appendChild(filmItem);
             });
@@ -151,6 +171,28 @@
         function searchFilm() {
             const query = document.getElementById('search').value;
             fetchFilms(query);
+        }
+
+        async function deleteFilm(movieName) {
+            const password = prompt('Inserisci la password per eliminare il film:');
+            if (!password) return;
+
+            const response = await fetch('/delete-film', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ movieName, password })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(result.message);
+                fetchFilms(); // Ricarica la lista dei film
+            } else {
+                alert(result.error);
+            }
         }
 
         // Carica la lista dei film al caricamento della pagina
